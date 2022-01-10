@@ -62,9 +62,17 @@ contract Exosphere is ReentrancyGuard {
         bool sold
     );
 
-    // event is emmited when an item is sold
+    /**
+     * @dev event is emmited when an item is sold
+     * @param itemId Represents the id of the nftContract
+     * @param owner Represents the address of the owner
+     */
     event MarketItemSold(uint256 indexed itemId, address owner);
 
+    /**
+     * @dev event is emmited when the fetchMarketItems function is called
+     * @param marketItems Represents an array of all nfts on the marketplace
+     */
     event MarketItemsFetched(uint256 marketItems);
 
     /**
@@ -100,7 +108,7 @@ contract Exosphere is ReentrancyGuard {
             false
         );
 
-        //IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
+        IERC721(nftContract).safeTransferFrom(msg.sender, address(this), tokenId);
 
         emit MarketItemCreated(
             itemId,
@@ -134,12 +142,12 @@ contract Exosphere is ReentrancyGuard {
         );
         require(sold != true, "This Sale has alredy finnished");
         emit MarketItemSold(itemId, msg.sender);
-
-        idToMarketItem[itemId].seller.transfer(msg.value);
-        //IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
         idToMarketItem[itemId].owner = payable(msg.sender);
         _itemsSold.increment();
         idToMarketItem[itemId].sold = true;
+        idToMarketItem[itemId].seller.transfer(msg.value);
+        IERC721(nftContract).safeTransferFrom(address(this), msg.sender, tokenId);
+        
     }
 
     /**

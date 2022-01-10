@@ -5,10 +5,10 @@ async function main() {
   
     console.log("Account balance:", (await deployer.getBalance()).toString());
   
-    const NftMarketplace = await ethers.getContractFactory("NftMarketplace");
-    const nftMarketplace = await NftMarketplace.deploy();
+    const Exosphere = await ethers.getContractFactory("Exosphere");
+    const exosphere = await Exosphere.deploy();
   
-    console.log("Contract address:", nftMarketplace.address);
+    console.log("Contract address:", exosphere.address);
   }
   
   main()
